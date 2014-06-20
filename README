@@ -1,0 +1,28 @@
+Project Plan
+
+Overview: XXXX is a web interface for sending IR signals from an LIRC server
+running on a RaspberryPi.
+
+Features:
+
+Setup:
+Parse LIRC config files to create remotes
+  Get device name (option to change)
+  "Buttons" (try to automate making display names out of them)
+Layout a remote by dragging and dropping desired buttons
+Select icon and display name for buttons
+Separate view to display all buttons in the config
+
+Admin:
+Add/Edit LIRC servers
+Create/Edit remotes
+Users
+Security
+
+Remote features:
+Custom macro buttons
+Single press or long press button
+
+Backend:
+Standardize layout for common buttons
+  e.g. number grids, vol+/-, chan+/-, etc.

@@ -1,0 +1,84 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $(".remote_button").on("click", function(){
+              var remote = $(this).data("remote");
+              var command = $(this).data("command");
+              var count = $(this).data("count");
+              var request = $.ajax({
+                'url': 'blast/r=' + remote + "&c=" + command + "&n=" + count,
+                'type': "GET"
+              });
+     });
+      // $('.remote_button.repeated').unbind("click");
+      var timeoutId = 0;
+      $('.remote_button.repeated').mousedown(function() {
+        remote = $(this).data("remote");
+        command = $(this).data("command");
+        count = $(this).data("count");
+        timeout = setTimeout(function(){
+          var request = $.ajax({
+            'url': 'hold/r=' + remote + "&c=" + command,
+            'type': "GET"
+          });
+        }, 100);
+      }).bind('mouseup', function() {
+          clearTimeout(timeout);
+          var remote = $(this).data("remote");
+          var command = $(this).data("command");
+          var count = $(this).data("count");
+          var request = $.ajax({
+            'url': 'release/r=' + remote + "&c=" + command,
+            'type': "GET"
+          });
+      });
+      $(".macro_button").bind("click", function(){
+        macro = $(this).data("macro");
+        var request = $.ajax({
+          "url": "macro/id=" + macro,
+          "type": "GET"
+        });
+      })
+    })
+  </script>
+</head>
+<body>
+<div style="display:block; width:100%; height: 100%; float:left">
+  {% set i = 0 %}
+  {% for r in remotes %}
+  <div id="{{ r }}" class="remote" style="float:left; margin:10px; top:0; display:block; height:100%">
+    <span style="font-size:36px; clear:none;">{{r}}</span>
+    <table>
+      <tr>
+  {% for c in remotes[r] %}
+  {% if remotes[r][c]["show"] == 1 %}
+  {% if remotes[r][c]["repeat"] == 1 %}
+  <td><input type="button" class="remote_button repeated" data-remote="{{ r }}" data-command="{{ c }}" data-count="1" value="{{ c }}"</input></td>
+  {% else %}
+  <td><input type="button" class="remote_button" data-remote="{{ r }}" data-command="{{ c }}" data-count="1" value="{{ c }}"</input></td>
+  {% endif %}
+  {% set i = i + 1 %}
+  {% endif %}
+  {% if i == 3 %}
+    {% set i = 0 %}
+    </tr>
+    <tr>
+    {% endif %}
+  {% endfor %}
+</div>
+</table>
+</div>
+{% endfor %}
+</div>
+<div id="macros">
+  <table>
+    <tr>
+    {% for m in macros %}
+    <td><input type="button" class="macro_button" data-macro="{{ m }}" value="{{ m }}"</input></td>
+{% endfor %}
+</tr>
+</table>
+</div>
+</html>
